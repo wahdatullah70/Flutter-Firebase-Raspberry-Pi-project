@@ -9,9 +9,13 @@ android/.gradle/
 build/
 /.dart_tool/
 
+# Local Python virtualenvs
+.venv/
+raspberry/.venv/
+raspberry/.venv_*/
+
 # Gradle
-**/gradle-wrapper.jar
-**/gradle-wrapper.properties
+android/local.properties
 
 # IntelliJ
 *.iml
@@ -30,6 +34,7 @@ android/key.properties
 *.log
 *.pyc
 *.swp
+.~lock.*
 .DS_Store
 .atom/
 .build/
@@ -59,6 +64,10 @@ migrate_working_dir/
 .pub/
 /build/
 /coverage/
+
+# Bundled Flutter SDK copies (keep out of git; collaborators should install Flutter)
+/flutter/
+/flutter_linux_*/
 
 # Symbolication related
 app.*.symbols

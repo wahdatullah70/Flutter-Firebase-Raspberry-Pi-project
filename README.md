@@ -10,23 +10,20 @@ Repository layout (important files)
 
 Quick start
 
-1. Ensure you have Flutter available. The repo includes a local Flutter SDK at `./flutter_linux_3.38.5-stable/flutter`.
+1. Ensure you have Flutter available (recommended: install Flutter normally and have `flutter` on PATH).
 
-```bash
-# From the workspace root
-./flutter_linux_3.38.5-stable/flutter/bin/flutter --version
-```
+If you keep a local Flutter SDK for convenience, you can also run Flutter via its path.
 
 2. Get Dart/Flutter dependencies:
 
 ```bash
-./flutter_linux_3.38.5-stable/flutter/bin/flutter pub get
+flutter pub get
 ```
 
 3. Build an Android debug APK:
 
 ```bash
-./flutter_linux_3.38.5-stable/flutter/bin/flutter build apk --debug
+flutter build apk --debug
 ```
 
 4. Install on Android device (example):
@@ -64,6 +61,33 @@ python3 solar_api.py
 Notes
 - Replace `raspberry/solar_api.py`'s `read_sensors()` function with real sensor code on the Pi.
 - Use `flutter analyze` to check for analyzer hints and `flutter test` for unit/widget tests.
+
+Firebase backend setup (Auth / Firestore / Storage)
+
+This app includes demo tabs for Firebase Auth (email/password), Firestore CRUD, and Firebase Storage.
+
+1) In Firebase Console create a project.
+2) Add an Android app with the same `applicationId` as [android/app/build.gradle.kts](android/app/build.gradle.kts) (currently `com.example.iee_project`).
+3) Download `google-services.json` and place it at `android/app/google-services.json`.
+4) Enable products you need:
+	- Authentication → Sign-in method → enable Email/Password
+	- Firestore Database → create database
+	- Storage → get started
+
+Platform notes
+- Android: works using `google-services.json`.
+- iOS/Web: you must also add the iOS/Web apps in Firebase Console and generate FlutterFire config (recommended), otherwise `Firebase.initializeApp()` will fail on those platforms.
+
+Recommended (multi-platform): FlutterFire CLI
+
+```bash
+dart pub global activate flutterfire_cli
+flutterfire configure
+```
+
+Then update initialization to use the generated `lib/firebase_options.dart`.
+
+See also: [docs/firebase_android_setup.md](docs/firebase_android_setup.md)
 # Solar Pesticide Sprayer — Demo
 
 This is a minimal Flutter demo that shows a dashboard UI for a solar-powered pesticide sprayer.
@@ -73,20 +97,19 @@ Quick start
 1. Ensure you have Flutter installed. You can use the included `flutter` binary in this repo:
 
 ```bash
-# From the workspace root
-./flutter_linux_3.38.5-stable/flutter/bin/flutter --version
+flutter --version
 ```
 
 2. Get dependencies:
 
 ```bash
-./flutter_linux_3.38.5-stable/flutter/bin/flutter pub get
+flutter pub get
 ```
 
 3. Run on a Linux desktop (if enabled):
 
 ```bash
-./flutter_linux_3.38.5-stable/flutter/bin/flutter run -d linux
+flutter run -d linux
 ```
 
 Or pick another connected device/emulator from `flutter devices`.

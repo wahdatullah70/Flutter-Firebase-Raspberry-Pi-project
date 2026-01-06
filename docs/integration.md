@@ -27,7 +27,7 @@ and that port `5000` is open (no firewall blocking local traffic).
 From the project root:
 
 ```bash
-./flutter_linux_3.38.5-stable/flutter/bin/flutter build apk --debug
+flutter build apk --debug
 adb push build/app/outputs/flutter-apk/app-debug.apk /sdcard/Download/
 # then install via file manager OR
 adb install -r build/app/outputs/flutter-apk/app-debug.apk
