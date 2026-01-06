@@ -13,6 +13,11 @@ build/
 .venv/
 raspberry/.venv/
 raspberry/.venv_*/
+raspberry/.venv_flask/
+
+# Large handoff artifacts (do not commit)
+handoff_windows.zip
+flutter_linux_*.tar.xz
 
 # Gradle
 android/local.properties
