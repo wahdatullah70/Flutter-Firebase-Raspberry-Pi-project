@@ -19,6 +19,9 @@ raspberry/.venv_flask/
 handoff_windows.zip
 flutter_linux_*.tar.xz
 
+# Docs / binary office files
+*.docx
+
 # Gradle
 android/local.properties
 
