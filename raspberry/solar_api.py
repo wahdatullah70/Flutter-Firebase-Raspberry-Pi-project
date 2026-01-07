@@ -29,11 +29,12 @@ Endpoints:
 """
 from __future__ import annotations
 
+import os
 import time
 import random
 from typing import Dict
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
@@ -58,6 +59,12 @@ def data():
 
     The client expects keys: `timestamp`, `power_w`, `battery_v`, `status`.
     """
+    expected = os.environ.get("SOLAR_API_TOKEN")
+    if expected:
+        provided = request.headers.get("X-API-Key", "")
+        if provided != expected:
+            return jsonify({"error": "unauthorized"}), 401
+
     sample = read_sensors()
     return jsonify(sample)
 

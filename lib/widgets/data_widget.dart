@@ -9,7 +9,8 @@ import '../services/data_service.dart';
 /// displays a helpful message.
 class DataWidget extends StatefulWidget {
   final String baseUrl;
-  const DataWidget({super.key, required this.baseUrl});
+  final String? apiKey;
+  const DataWidget({super.key, required this.baseUrl, this.apiKey});
 
   @override
   State<DataWidget> createState() => _DataWidgetState();
@@ -24,7 +25,7 @@ class _DataWidgetState extends State<DataWidget> {
   @override
   void initState() {
     super.initState();
-    _service = DataService(widget.baseUrl);
+    _service = DataService(widget.baseUrl, apiKey: widget.apiKey);
     _fetch();
     _timer = Timer.periodic(const Duration(seconds: 3), (_) => _fetch());
   }

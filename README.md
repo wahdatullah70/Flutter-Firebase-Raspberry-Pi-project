@@ -62,6 +62,9 @@ Notes
 - Replace `raspberry/solar_api.py`'s `read_sensors()` function with real sensor code on the Pi.
 - Use `flutter analyze` to check for analyzer hints and `flutter test` for unit/widget tests.
 
+Global access to the Pi API (Cloudflare Tunnel)
+- See [docs/cloudflare_tunnel_pi.md](docs/cloudflare_tunnel_pi.md)
+
 Firebase backend setup (Auth / Firestore / Storage)
 
 This app includes demo tabs for Firebase Auth (email/password), Firestore CRUD, and Firebase Storage.

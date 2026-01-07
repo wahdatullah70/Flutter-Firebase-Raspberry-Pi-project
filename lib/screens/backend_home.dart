@@ -56,30 +56,56 @@ class _SprayerDashboardTab extends StatefulWidget {
 
 class _SprayerDashboardTabState extends State<_SprayerDashboardTab> {
   String _piBaseUrl = '';
+  String _piApiKey = '';
   bool _mappingActive = true;
 
   Future<void> _showSetPiDialog() async {
     final controller = TextEditingController(text: _piBaseUrl);
-    final res = await showDialog<String?>(
+    final keyController = TextEditingController(text: _piApiKey);
+    final res = await showDialog<({String? url, String? apiKey})?>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Set Raspberry Pi base URL'),
-        content: TextField(
-          controller: controller,
-          decoration: const InputDecoration(hintText: 'http://<pi-ip>:5000'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: controller,
+              decoration: const InputDecoration(
+                labelText: 'Base URL',
+                hintText: 'https://api.example.com',
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: keyController,
+              decoration: const InputDecoration(
+                labelText: 'API key (optional)',
+                hintText: 'X-API-Key token',
+              ),
+            ),
+          ],
         ),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
               child: const Text('Cancel')),
           FilledButton(
-              onPressed: () => Navigator.pop(context, controller.text),
+              onPressed: () => Navigator.pop(
+                    context,
+                    (url: controller.text, apiKey: keyController.text),
+                  ),
               child: const Text('Save')),
         ],
       ),
     );
 
-    if (res != null) setState(() => _piBaseUrl = res.trim());
+    if (res != null) {
+      setState(() {
+        _piBaseUrl = (res.url ?? '').trim();
+        _piApiKey = (res.apiKey ?? '').trim();
+      });
+    }
   }
 
   Color _statusColor(String status) {
@@ -141,7 +167,7 @@ class _SprayerDashboardTabState extends State<_SprayerDashboardTab> {
                   const Text('Live Data',
                       style: TextStyle(fontWeight: FontWeight.w700)),
                   const SizedBox(height: 8),
-                  DataWidget(baseUrl: _piBaseUrl),
+                  DataWidget(baseUrl: _piBaseUrl, apiKey: _piApiKey),
                 ],
               ),
             ),

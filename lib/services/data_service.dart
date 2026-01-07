@@ -10,8 +10,9 @@ import 'package:http/http.dart' as http;
 ///
 class DataService {
   final String baseUrl;
+  final String? apiKey;
 
-  DataService(this.baseUrl) : assert(baseUrl.isNotEmpty, 'baseUrl must not be empty');
+  DataService(this.baseUrl, {this.apiKey}) : assert(baseUrl.isNotEmpty, 'baseUrl must not be empty');
 
   /// Fetch telemetry from `<baseUrl>/data`.
   ///
@@ -21,7 +22,13 @@ class DataService {
   Future<Map<String, dynamic>?> fetchData() async {
     try {
       final uri = Uri.parse('$baseUrl/data');
-      final res = await http.get(uri).timeout(const Duration(seconds: 5));
+      final headers = <String, String>{};
+      final key = apiKey?.trim();
+      if (key != null && key.isNotEmpty) {
+        headers['X-API-Key'] = key;
+      }
+
+      final res = await http.get(uri, headers: headers).timeout(const Duration(seconds: 5));
       if (res.statusCode != 200) {
         // Non-200 responses are treated as no-data for the demo app.
         return null;
