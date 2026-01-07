@@ -91,6 +91,10 @@ flutterfire configure
 Then update initialization to use the generated `lib/firebase_options.dart`.
 
 See also: [docs/firebase_android_setup.md](docs/firebase_android_setup.md)
+
+Beginner guides
+- Windows install/build: [docs/windows_install_and_build.md](docs/windows_install_and_build.md)
+- Change Firebase project: [docs/change_firebase_project.md](docs/change_firebase_project.md)
 # Solar Pesticide Sprayer — Demo
 
 This is a minimal Flutter demo that shows a dashboard UI for a solar-powered pesticide sprayer.
