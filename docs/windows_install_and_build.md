@@ -26,9 +26,9 @@ flutter --version
 flutter doctor
 ```
 
-If `flutter doctor` shows missing items, it will tell you what to install.
+If `flutter doctor` shows missing items, install or configure the components it reports.
 
-### Step 2 — Install Git (needed to download the project)
+### Step 2 — Install Git
 1. Install Git for Windows.
 2. Open PowerShell and run:
 
@@ -36,7 +36,7 @@ If `flutter doctor` shows missing items, it will tell you what to install.
 git --version
 ```
 
-### Step 3 — Download (clone) this project
+### Step 3 — Download this project
 1. Open PowerShell.
 2. Go to a folder where you keep projects, for example:
 
@@ -44,14 +44,12 @@ git --version
 cd C:\Users\<YourName>\Documents
 ```
 
-3. Clone the repo:
+3. Clone the current repository:
 
 ```powershell
-git clone git@github.com:wahdatullah70/iee_project.git
-cd iee_project
+git clone https://github.com/wahdatullah70/Flutter-Firebase-Raspberry-Pi-project.git
+cd Flutter-Firebase-Raspberry-Pi-project
 ```
-
-If the `git clone` command asks for SSH keys and you don’t have them, tell me and I’ll guide you with the easiest option.
 
 ### Step 4 — Connect your Android phone
 1. On your phone, enable **Developer options**.
@@ -65,7 +63,7 @@ flutter devices
 
 You should see your phone in the list.
 
-### Step 5 — Run the app (developer mode)
+### Step 5 — Run the app
 From the project folder:
 
 ```powershell
@@ -75,7 +73,7 @@ flutter run
 
 ---
 
-## Option B: Build an APK and install it on a phone (no coding)
+## Option B: Build an APK and install it on a phone
 
 ### Step 1 — Build the release APK
 From the project folder:
@@ -91,15 +89,15 @@ After the build finishes, the APK is usually here:
 
 ### Step 3 — Install the APK on your phone
 Two simple ways:
-1) **Copy the APK** to your phone (USB cable) → open it from File Manager → install
-2) Use `adb` (Android platform tools). This is optional.
+1. Copy the APK to your phone using USB, then open it from the File Manager and install it.
+2. Use `adb install build\app\outputs\flutter-apk\app-release.apk` if Android platform tools are installed.
 
 ---
 
 ## Option C (Optional / Advanced): Run as a Windows desktop app
 
 Important:
-- Right now this project’s Firebase setup is **Android-focused** (`android/app/google-services.json`).
-- A Windows desktop build with Firebase usually needs extra setup (FlutterFire config) and code changes.
+- This project’s Firebase setup is primarily **Android-focused** (`android/app/google-services.json`).
+- A Windows desktop build using Firebase may require additional FlutterFire configuration and platform-specific setup.
 
-If you want the app to run on Windows desktop **with Firebase working**, tell me and I will guide you and/or update the project to support Windows properly.
+For a Firebase-enabled Windows build, configure the Windows platform with the FlutterFire CLI and verify the generated Firebase options before deployment.
