@@ -1,126 +1,184 @@
-# Solar Pesticide Sprayer — Demo
+# Solar Pesticide Sprayer — Flutter + Firebase + Raspberry Pi
 
-This repository contains a minimal Flutter demo that shows a dashboard UI for a solar-powered pesticide sprayer and a tiny Raspberry Pi demo API.
+A full-stack engineering demo that connects a **Flutter application**, **Firebase Authentication/Firestore/Storage**, and an optional **Raspberry Pi telemetry API**.
 
-Repository layout (important files)
-- `lib/main.dart` — app UI and Pi integration (set Pi URL with cloud icon)
-- `lib/widgets/data_widget.dart` — widget that polls the Pi `/data` endpoint
-- `lib/services/data_service.dart` — HTTP client used by `DataWidget`
-- `raspberry/` — small Flask API that demonstrates the Pi endpoint (`/data`)
+The project demonstrates how a mobile/desktop client, managed cloud backend, and edge device can work together with clear authentication boundaries, storage, API communication, deployment, and troubleshooting documentation.
 
-Quick start
+## Architecture
 
-1. Ensure you have Flutter available (recommended: install Flutter normally and have `flutter` on PATH).
+```mermaid
+flowchart LR
+    U[User] --> APP[Flutter App]
+    APP --> AUTH[Firebase Authentication]
+    APP --> DB[Cloud Firestore]
+    APP --> STORAGE[Firebase Storage]
+    APP -->|HTTPS + optional X-API-Key| PI[Raspberry Pi Flask API]
+    PI --> SENSOR[Sensors / Sample Telemetry]
+    TUNNEL[Cloudflare Tunnel - optional] --> PI
+    APP --> TUNNEL
+```
 
-If you keep a local Flutter SDK for convenience, you can also run Flutter via its path.
+See [docs/architecture.md](docs/architecture.md) for the component-level design.
 
-2. Get Dart/Flutter dependencies:
+## Main capabilities
+
+- Email/password authentication with Firebase
+- Auth-state gate between login and application UI
+- Firestore CRUD demo
+- Firebase Storage upload/download flow
+- Raspberry Pi telemetry polling
+- Optional `X-API-Key` protection for the Pi endpoint
+- Optional Cloudflare Tunnel for remote Pi access
+- Android build workflow
+- Multi-layer troubleshooting and security documentation
+
+## Request flow
+
+### User authentication
+
+```text
+User → LoginScreen → AuthService → Firebase Authentication
+                               ↓
+                      authenticated session
+                               ↓
+                        authStateChanges()
+                               ↓
+                           AuthGate
+                               ↓
+                      BackendHomeScreen
+```
+
+### Raspberry Pi telemetry
+
+```text
+Flutter dashboard
+      │ GET /data
+      │ X-API-Key (optional)
+      ▼
+Raspberry Pi Flask API
+      │
+      ▼
+read_sensors()
+      │
+      ▼
+JSON telemetry
+      │
+      ▼
+Flutter DataWidget
+```
+
+Detailed flows: [docs/request-flows.md](docs/request-flows.md)
+
+## Repository structure
+
+```text
+iee_project/
+├── lib/
+│   ├── main.dart
+│   ├── screens/
+│   ├── services/
+│   └── widgets/
+├── raspberry/
+│   └── solar_api.py
+├── firebase/
+├── android/
+├── docs/
+│   ├── architecture.md
+│   ├── request-flows.md
+│   ├── deployment.md
+│   ├── security.md
+│   ├── troubleshooting.md
+│   ├── firebase_android_setup.md
+│   ├── cloudflare_tunnel_pi.md
+│   └── change_firebase_project.md
+└── diagrams/
+```
+
+## Quick start
+
+### Flutter app
 
 ```bash
 flutter pub get
+flutter analyze
+flutter run
 ```
 
-3. Build an Android debug APK:
+For Android APK:
 
 ```bash
 flutter build apk --debug
 ```
 
-4. Install on Android device (example):
+### Firebase
 
-```bash
-adb install -r build/app/outputs/flutter-apk/app-debug.apk
-```
+Follow [docs/firebase_android_setup.md](docs/firebase_android_setup.md).
 
-If your device blocks ADB installs (MIUI), you can push the APK and install manually:
+Enable:
 
-```bash
-adb push build/app/outputs/flutter-apk/app-debug.apk /sdcard/Download/
-# then open the file on the phone and install using the file manager
-```
+- Authentication → Email/Password
+- Firestore Database
+- Firebase Storage
 
-Raspberry Pi demo API
-
-1. Change into the `raspberry` folder and create a virtualenv:
+### Raspberry Pi API
 
 ```bash
 cd raspberry
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-```
-
-2. Run the demo API (development server):
-
-```bash
 python3 solar_api.py
 ```
 
-3. In the mobile app: tap the cloud icon (top-right), set the base URL to `http://<pi-ip>:5000` and the app will poll `/data`.
-
-Notes
-- Replace `raspberry/solar_api.py`'s `read_sensors()` function with real sensor code on the Pi.
-- Use `flutter analyze` to check for analyzer hints and `flutter test` for unit/widget tests.
-
-Global access to the Pi API (Cloudflare Tunnel)
-- See [docs/cloudflare_tunnel_pi.md](docs/cloudflare_tunnel_pi.md)
-
-Firebase backend setup (Auth / Firestore / Storage)
-
-This app includes demo tabs for Firebase Auth (email/password), Firestore CRUD, and Firebase Storage.
-
-1) In Firebase Console create a project.
-2) Add an Android app with the same `applicationId` as [android/app/build.gradle.kts](android/app/build.gradle.kts) (currently `com.example.iee_project`).
-3) Download `google-services.json` and place it at `android/app/google-services.json`.
-4) Enable products you need:
-	- Authentication → Sign-in method → enable Email/Password
-	- Firestore Database → create database
-	- Storage → get started
-
-Platform notes
-- Android: works using `google-services.json`.
-- iOS/Web: you must also add the iOS/Web apps in Firebase Console and generate FlutterFire config (recommended), otherwise `Firebase.initializeApp()` will fail on those platforms.
-
-Recommended (multi-platform): FlutterFire CLI
+Then test:
 
 ```bash
-dart pub global activate flutterfire_cli
-flutterfire configure
+curl http://127.0.0.1:5000/data
 ```
 
-Then update initialization to use the generated `lib/firebase_options.dart`.
-
-See also: [docs/firebase_android_setup.md](docs/firebase_android_setup.md)
-
-Beginner guides
-- Windows install/build: [docs/windows_install_and_build.md](docs/windows_install_and_build.md)
-- Change Firebase project: [docs/change_firebase_project.md](docs/change_firebase_project.md)
-# Solar Pesticide Sprayer — Demo
-
-This is a minimal Flutter demo that shows a dashboard UI for a solar-powered pesticide sprayer.
-
-Quick start
-
-1. Ensure you have Flutter installed. You can use the included `flutter` binary in this repo:
+To require an API token:
 
 ```bash
-flutter --version
+export SOLAR_API_TOKEN='replace-with-a-strong-secret'
+curl -H "X-API-Key: $SOLAR_API_TOKEN" http://127.0.0.1:5000/data
 ```
 
-2. Get dependencies:
+## Engineering documentation
 
-```bash
-flutter pub get
-```
+| Topic | Guide |
+|---|---|
+| System design | [docs/architecture.md](docs/architecture.md) |
+| Request/data flows | [docs/request-flows.md](docs/request-flows.md) |
+| Deployment | [docs/deployment.md](docs/deployment.md) |
+| Security | [docs/security.md](docs/security.md) |
+| Troubleshooting | [docs/troubleshooting.md](docs/troubleshooting.md) |
+| Firebase Android setup | [docs/firebase_android_setup.md](docs/firebase_android_setup.md) |
+| Change Firebase project | [docs/change_firebase_project.md](docs/change_firebase_project.md) |
+| Remote Pi access | [docs/cloudflare_tunnel_pi.md](docs/cloudflare_tunnel_pi.md) |
 
-3. Run on a Linux desktop (if enabled):
+## Security model
 
-```bash
-flutter run -d linux
-```
+The project intentionally separates two authentication domains:
 
-Or pick another connected device/emulator from `flutter devices`.
+1. **Firebase identity** for users, Firestore, and Storage.
+2. **Raspberry Pi API token** for edge telemetry access.
 
-Notes
-- The UI uses sample, hard-coded values — hook it up to your sensors/backend for a full app.
-- If you prefer to use a globally-installed `flutter`, replace the path above with `flutter`.
+Sensitive credentials should not be committed to Git. The Pi secret is read from `SOLAR_API_TOKEN`, while Firebase authorization is enforced through Authentication + Security Rules.
+
+## What this project demonstrates
+
+- Flutter application architecture
+- Firebase Authentication and authorization concepts
+- Firestore and cloud storage integration
+- REST API design and consumption
+- Raspberry Pi / edge integration
+- credential and token handling
+- cloud-to-edge request flow
+- troubleshooting across application, backend, network, and device layers
+- deployment documentation and engineering handoff practices
+
+## Author
+
+**Wahdat Ullah** — HPC, Linux Systems, Cloud, DevOps, Kubernetes, Security & MLOps
+
+[GitHub Profile](https://github.com/wahdatullah70) · [Engineering Portfolio](https://github.com/wahdatullah70/My_Protfolio)
