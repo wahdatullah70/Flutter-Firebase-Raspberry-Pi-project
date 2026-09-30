@@ -1,5 +1,8 @@
 # Solar Pesticide Sprayer — Flutter + Firebase + Raspberry Pi
 
+[![Flutter CI](https://github.com/wahdatullah70/Flutter-Firebase-Raspberry-Pi-project/actions/workflows/flutter-ci.yml/badge.svg)](https://github.com/wahdatullah70/Flutter-Firebase-Raspberry-Pi-project/actions/workflows/flutter-ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 A full-stack engineering demo that connects a **Flutter application**, **Firebase Authentication/Firestore/Storage**, and an optional **Raspberry Pi telemetry API**.
 
 The project demonstrates how a mobile/desktop client, managed cloud backend, and edge device can work together with clear authentication boundaries, storage, API communication, deployment, and troubleshooting documentation.
@@ -30,7 +33,8 @@ See [docs/architecture.md](docs/architecture.md) for the component-level design.
 - Optional `X-API-Key` protection for the Pi endpoint
 - Optional Cloudflare Tunnel for remote Pi access
 - Android build workflow
-- Multi-layer troubleshooting and security documentation
+- automated Flutter analysis/tests in GitHub Actions
+- multi-layer troubleshooting and security documentation
 
 ## Request flow
 
@@ -72,7 +76,12 @@ Detailed flows: [docs/request-flows.md](docs/request-flows.md)
 ## Repository structure
 
 ```text
-iee_project/
+Flutter-Firebase-Raspberry-Pi-project/
+├── .github/workflows/flutter-ci.yml
+├── README.md
+├── LICENSE
+├── SECURITY.md
+├── CONTRIBUTING.md
 ├── lib/
 │   ├── main.dart
 │   ├── screens/
@@ -82,6 +91,8 @@ iee_project/
 │   └── solar_api.py
 ├── firebase/
 ├── android/
+├── test/
+│   └── widget_test.dart
 ├── docs/
 │   ├── architecture.md
 │   ├── request-flows.md
@@ -101,6 +112,7 @@ iee_project/
 ```bash
 flutter pub get
 flutter analyze
+flutter test
 flutter run
 ```
 
@@ -143,6 +155,20 @@ export SOLAR_API_TOKEN='replace-with-a-strong-secret'
 curl -H "X-API-Key: $SOLAR_API_TOKEN" http://127.0.0.1:5000/data
 ```
 
+## CI workflow
+
+Every push and pull request runs:
+
+```text
+flutter pub get
+       ↓
+flutter analyze
+       ↓
+flutter test
+```
+
+This helps keep the public project buildable and catches analyzer/test regressions early.
+
 ## Engineering documentation
 
 | Topic | Guide |
@@ -155,6 +181,8 @@ curl -H "X-API-Key: $SOLAR_API_TOKEN" http://127.0.0.1:5000/data
 | Firebase Android setup | [docs/firebase_android_setup.md](docs/firebase_android_setup.md) |
 | Change Firebase project | [docs/change_firebase_project.md](docs/change_firebase_project.md) |
 | Remote Pi access | [docs/cloudflare_tunnel_pi.md](docs/cloudflare_tunnel_pi.md) |
+| Contribution workflow | [CONTRIBUTING.md](CONTRIBUTING.md) |
+| Security policy | [SECURITY.md](SECURITY.md) |
 
 ## Security model
 
@@ -174,6 +202,7 @@ Sensitive credentials should not be committed to Git. The Pi secret is read from
 - Raspberry Pi / edge integration
 - credential and token handling
 - cloud-to-edge request flow
+- CI-based analysis/testing
 - troubleshooting across application, backend, network, and device layers
 - deployment documentation and engineering handoff practices
 
