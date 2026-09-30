@@ -1,0 +1,7 @@
+{
+  "timestamp": 0,
+  "power_w": 118.4,
+  "battery_v": 12.86,
+  "status": "OK",
+  "note": "DEMO SAMPLE ONLY. Values are illustrative and not captured from a physical Raspberry Pi sensor run."
+}
