@@ -9,7 +9,9 @@ void main() async {
 }
 
 class SprayerApp extends StatelessWidget {
-  const SprayerApp({super.key});
+  final Widget? home;
+
+  const SprayerApp({super.key, this.home});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,7 @@ class SprayerApp extends StatelessWidget {
           border: OutlineInputBorder(),
         ),
       ),
-      home: const AuthGate(),
+      home: home ?? const AuthGate(),
     );
   }
 }
