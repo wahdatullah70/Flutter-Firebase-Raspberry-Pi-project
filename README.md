@@ -7,6 +7,14 @@ A full-stack engineering demo that connects a **Flutter application**, **Firebas
 
 The project demonstrates how a mobile/desktop client, managed cloud backend, and edge device can work together with clear authentication boundaries, storage, API communication, deployment, and troubleshooting documentation.
 
+## Demo UI
+
+![Demo dashboard mockup](docs/images/demo-dashboard.svg)
+
+> The image above is a **DEMO UI MOCKUP**, not a screenshot captured from a physical Raspberry Pi deployment. It visualizes the data contract and system flow used by this repository.
+
+A sample telemetry payload is available at [`docs/demo-api-response.json`](docs/demo-api-response.json). Its values are illustrative only.
+
 ## Architecture
 
 ```mermaid
@@ -73,6 +81,21 @@ Flutter DataWidget
 
 Detailed flows: [docs/request-flows.md](docs/request-flows.md)
 
+## Sample API contract
+
+The Flask endpoint returns this shape:
+
+```json
+{
+  "timestamp": 0,
+  "power_w": 118.4,
+  "battery_v": 12.86,
+  "status": "OK"
+}
+```
+
+These README numbers are demo values. The implementation in `raspberry/solar_api.py` generates sample telemetry until `read_sensors()` is replaced with real GPIO/I2C/SPI sensor code.
+
 ## Repository structure
 
 ```text
@@ -99,6 +122,8 @@ Flutter-Firebase-Raspberry-Pi-project/
 │   ├── deployment.md
 │   ├── security.md
 │   ├── troubleshooting.md
+│   ├── demo-api-response.json
+│   ├── images/demo-dashboard.svg
 │   ├── firebase_android_setup.md
 │   ├── cloudflare_tunnel_pi.md
 │   └── change_firebase_project.md
@@ -178,6 +203,7 @@ This helps keep the public project buildable and catches analyzer/test regressio
 | Deployment | [docs/deployment.md](docs/deployment.md) |
 | Security | [docs/security.md](docs/security.md) |
 | Troubleshooting | [docs/troubleshooting.md](docs/troubleshooting.md) |
+| Demo telemetry | [docs/demo-api-response.json](docs/demo-api-response.json) |
 | Firebase Android setup | [docs/firebase_android_setup.md](docs/firebase_android_setup.md) |
 | Change Firebase project | [docs/change_firebase_project.md](docs/change_firebase_project.md) |
 | Remote Pi access | [docs/cloudflare_tunnel_pi.md](docs/cloudflare_tunnel_pi.md) |
@@ -203,6 +229,7 @@ Sensitive credentials should not be committed to Git. The Pi secret is read from
 - credential and token handling
 - cloud-to-edge request flow
 - CI-based analysis/testing
+- demo-data visualization without misrepresenting a real deployment
 - troubleshooting across application, backend, network, and device layers
 - deployment documentation and engineering handoff practices
 
