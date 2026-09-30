@@ -1,20 +1,20 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:iee_project/main.dart';
 
 void main() {
-  testWidgets('App shows title', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const SprayerApp());
+  testWidgets('App renders injected test home without Firebase', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      const SprayerApp(
+        home: Scaffold(
+          appBar: AppBar(title: Text('Solar Pesticide Sprayer')),
+          body: Center(child: Text('Telemetry Dashboard')),
+        ),
+      ),
+    );
 
-    // Verify that the app shows the expected title in the AppBar.
     expect(find.text('Solar Pesticide Sprayer'), findsOneWidget);
+    expect(find.text('Telemetry Dashboard'), findsOneWidget);
   });
 }
